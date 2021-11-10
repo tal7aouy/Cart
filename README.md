@@ -45,7 +45,7 @@ $cart = new Cart([
 
 Adds an item to cart.
 
-> **bool** \$cart->add( **string** \$id\[, **int** \$quantity\]\[, **array** $attributes\] );
+> $cart->add(**string** $id, **int** $quantity = 1, **array** $attributes = []): **bool**;
 
 ```php
 // Add item with ID #1001
@@ -75,7 +75,7 @@ $cart->add('1003', 1, [
 
 Updates quantity of an item. Attributes **must be** provides if item with same ID exists with different attributes.
 
-> **bool** \$cart->update( **string** \$id, **int** $quantity\[, **array** \$attributes\] );
+> $cart->update(**string** $id, **int** $quantity = 1, **array** $attributes = []): **bool**;
 
 ```php
 // Set quantity for item #1001 to 5
@@ -95,7 +95,7 @@ $cart->update('1003', 2, [
 
 Removes an item. Attributes **must be** provided to remove specified item, or all items with same ID will be removed from cart.
 
-> **bool** \$cart->remove( **string** $id\[, **array** \$attributes\] );
+> $cart->remove(**string** $id, **array** $attributes = []): **bool**;
 
 ```php
 // Remove item #1001
@@ -115,7 +115,7 @@ $cart->remove('1003', [
 
 Gets a multi-dimensional array of items stored in cart.
 
-> **array** \$cart->getItems( );
+> $cart->getItems( ): **array**;
 
 ```php
 // Get all items in the cart
@@ -137,7 +137,7 @@ foreach ($allItems as $items) {
 
 Gets a multi-dimensional array of one item stored in cart.
 
-> **array** \$cart->getItem( **string** $id\[, **string** \$hash\] );
+> $cart->getItem(**string** $id, **string** $hash): **array**;
 
 ```php
 // Get first one item from the cart with id 1001
@@ -153,7 +153,7 @@ $theItem = $cart->getItem($item['id'], $item['hash']);
 
 Checks if the cart is empty.
 
-> **bool** \$cart->isEmpty( );
+> $cart->isEmpty( ):**bool**;
 
 ```php
 if ($cart->isEmpty()) {
@@ -167,7 +167,7 @@ if ($cart->isEmpty()) {
 
 Gets the total of items in the cart.
 
-> **int** \$cart->getTotalItems( );
+> $cart->getTotalItems( ): **int**;
 
 ```php
 echo 'There are '.$cart->getTotalItems().' items in the cart.';
@@ -179,7 +179,7 @@ echo 'There are '.$cart->getTotalItems().' items in the cart.';
 
 Gets the total of quantity in the cart.
 
-> **int** \$cart->getTotalQuantity( );
+> $cart->getTotalQuantity( ): **int**;
 
 ```php
 echo $cart->getTotalQuantity();
@@ -191,7 +191,7 @@ echo $cart->getTotalQuantity();
 
 Gets the sum of a specific attribute.
 
-> **int** \$cart->getTotalAttribute( **string** $attribute );
+> $cart->getTotalAttribute( **string** $attribute ): **init**;
 
 ```php
 echo '<h3>Total Price: $'.number_format($cart->getTotalAttribute('price'), 2, '.', ',').'</h3>';
@@ -203,7 +203,7 @@ echo '<h3>Total Price: $'.number_format($cart->getTotalAttribute('price'), 2, '.
 
 Clears all items in the cart.
 
-> \$cart->clear( );
+> $cart->clear( ):void;
 
 ```php
 $cart->clear();
