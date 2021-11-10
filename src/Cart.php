@@ -112,7 +112,7 @@ class Cart
         return false;
     }
 
-    public function getItem(string $id, string $hash = null)
+    public function getItem(string $id, string $hash = null): array
     {
         if ($hash) {
             $key = array_search($hash, array_column($this->items['id'], 'hash'));
@@ -231,15 +231,15 @@ class Cart
         return $total;
     }
 
-    public function clear()
+    /**
+     * clear cart items
+     */
+    public function clear(): void
     {
         // clear array items
         $this->items = [];
         $this->write();
     }
-
-
-
     /**
      *  Destory cart session.
      */
