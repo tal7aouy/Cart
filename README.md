@@ -19,7 +19,7 @@ A simple PHP shopping cart library to use in ecommerce web applications
 
 ```php
 //Instantiate cart 
-$cart= new Cart( \[**array** $options\] );
+$cart= new Cart(**array** $options);
 ```
 
 
