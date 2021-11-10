@@ -3,10 +3,10 @@ A simple PHP shopping cart library to use in ecommerce web applications
 
 ## Usage
 ### Installation
-
+```sh 
+  composer require tal7aouy/cart
+  ```
 ### Configuration
-
-> \$cart= new Cart( \[**array** $options\] );
 
 ##### Options
 
@@ -17,20 +17,23 @@ A simple PHP shopping cart library to use in ecommerce web applications
 | cookieState     | **bool** |  cookie that helps you to keep data in browser when it closed.         |
 
 
+```php
+\$cart= new Cart( \[**array** $options\] );
+```
+
 
 ```php
-// Include core Cart library
-require_once __DIR__."/vendor/autoload.php";
-use Tal7aouy\Cart;
+  require_once __DIR__."/vendor/autoload.php";
+  use Tal7aouy\Cart;
 // Initialize Cart object
 $cart = new Cart([
   // Can add unlimited number of item to cart
   'maxItem'      => 0,
   
-  // Set maximum quantity allowed per item to 99
-  'itemMaxQte'  => 99,
+  // Set maximum quantity allowed per item to 20
+  'itemMaxQte'  => 20,
   
-  // Do not use cookie, cart data will lost when browser is closed
+  // do not use cookie ,cart data will lost when browser is closed
   'cookieState'        => false,
 ]);
 ```
