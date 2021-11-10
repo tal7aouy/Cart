@@ -1,0 +1,26 @@
+{
+    "name": "tal7aouy/cart",
+    "description": "A simple PHP shopping cart library to use in ecommerce web applications.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tal7aouy\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "role": "Developer",
+            "name": "Mhammed Talhaouy",
+            "email": "tal7aouy@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0"
+    },
+    "prefer-stable": true,
+    "require-dev": {
+
+    }
+}
