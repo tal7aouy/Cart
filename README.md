@@ -16,7 +16,6 @@ A simple PHP shopping cart library to use in ecommerce web applications
 | itemMaxQte      | **int**  | The maximum quantity per item can be added to cart. 0 = Unlimited      |
 | cookieState     | **bool** |  cookie that helps you to keep data in browser when it closed.         |
 
-
 ```php
 //Instantiate cart 
 $cart= new Cart(**array** $options);
