@@ -48,23 +48,23 @@ Adds an item to cart.
 > $cart->add(**string** $id, **int** $quantity = 1, **array** $attributes = []): **bool**;
 
 ```php
-// Add item with ID #1001
-$cart->add('1001');
+// Add item with ID #10
+$cart->add('10');
 
-// Add 5 item with ID #1002
-$cart->add('1002', 5);
+// Add 5 item with ID #12
+$cart->add('12', 5);
 
-// Add item with ID #1003 with price, color, and size
-$cart->add('1003', 1, [
+// Add item with ID #14 with price, color, and size
+$cart->add('14', 1, [
   'price'  => '5.99',
-  'color'  => 'White',
-  'size'   => 'XS',
+  'color'  => 'yellow',
+  'size'   => 'SM',
 ]);
 
 // Item with same ID but different attributes will added as separate item in cart
-$cart->add('1003', 1, [
+$cart->add('14', 1, [
   'price'  => '5.99',
-  'color'  => 'Red',
+  'color'  => 'Brown',
   'size'   => 'M',
 ]);
 ```
@@ -78,11 +78,11 @@ Updates quantity of an item. Attributes **must be** provides if item with same I
 > $cart->update(**string** $id, **int** $quantity = 1, **array** $attributes = []): **bool**;
 
 ```php
-// Set quantity for item #1001 to 5
-$cart->update('1001', 5);
+// Set quantity for item #10 to 5
+$cart->update('10', 5);
 
-// Set quantity for item #1003 to 2
-$cart->update('1003', 2, [
+// Set quantity for item #14 to 2
+$cart->update('14' [
   'price'  => '5.99',
   'color'  => 'Red',
   'size'   => 'M',
@@ -98,10 +98,10 @@ Removes an item. Attributes **must be** provided to remove specified item, or al
 > $cart->remove(**string** $id, **array** $attributes = []): **bool**;
 
 ```php
-// Remove item #1001
-$cart->remove('1001');
+// Remove item #10
+$cart->remove('10');
 
-// Remove item #1003 with color White and size XS
+// Remove item #14 with color white and size XS
 $cart->remove('1003', [
   'price'  => '5.99',
   'color'  => 'White',
@@ -140,8 +140,8 @@ Gets a multi-dimensional array of one item stored in cart.
 > $cart->getItem(**string** $id, **string** $hash): **array**;
 
 ```php
-// Get first one item from the cart with id 1001
-$theItem = $cart->getItem('1001');
+// Get first one item from the cart with id 10
+$theItem = $cart->getItem('10');
 
 // Get one item from the cart with any id and hash
 $theItem = $cart->getItem($item['id'], $item['hash']);
@@ -234,3 +234,5 @@ if ($cart->isItemExists('1001')) {
   echo 'This item already added to cart.';
 }
 ```
+
+
