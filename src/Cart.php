@@ -31,16 +31,20 @@ class Cart
     protected bool $cookieState = false;
 
     /**
-     * Init cart.
+     * @param array|null $options
      */
     public function __construct(?array $options = [])
     {
         $this->init($options);
     }
+
+    /**
+     * @param array $options
+     */
     private function init(array $options): void
     {
 
-        if (!session_id()) {
+        if (session_id() == '' && !headers_sent()) {
             session_start();
         }
 
@@ -61,8 +65,15 @@ class Cart
          */
         $this->cartId = md5($_SERVER['HTTP_HOST'] ?? 'shoppingCart') . '_cart';
 
-        $this->read();
+        $this->bring();
     }
+
+    /**
+     * @param string $id
+     * @param int $quantity
+     * @param array $attributes
+     * @return bool
+     */
     public function add(string $id, int $quantity = 1, array $attributes = []): bool
     {
         $quantity = (preg_match('/^\d+$/', $quantity)) ? $quantity : 1;
@@ -79,7 +90,7 @@ class Cart
                     $this->items[$id][$index]['quantity'] += $quantity;
                     $this->items[$id][$index]['quantity'] = ($this->itemMaxQte < $this->items[$id][$index]['quantity'] && $this->itemMaxQte != 0) ? $this->itemMaxQuantity : $this->items[$id][$index]['quantity'];
 
-                    $this->write();
+                    $this->do();
 
                     return true;
                 }
@@ -93,11 +104,16 @@ class Cart
             'attributes' => $attributes,
         ];
 
-        $this->write();
+        $this->do();
 
         return true;
     }
 
+    /**
+     * @param string $id
+     * @param array $attributes
+     * @return bool
+     */
     public function has(string $id, array $attributes = []): bool
     {
         $attributes = (is_array($attributes)) ? array_filter($attributes) : [$attributes];
@@ -112,18 +128,12 @@ class Cart
         return false;
     }
 
-    public function getItem(string $id, string $hash = null): array
-    {
-        if ($hash) {
-            $key = array_search($hash, array_column($this->items['id'], 'hash'));
-            if ($key !== false) return $this->items[$id][$key];
-            return false;
-        } else {
-            return reset($this->items[$id]);
-        }
-    }
-
-
+    /**
+     * @param string $id
+     * @param int $quantity
+     * @param array $attributes
+     * @return bool
+     */
     public function update(string $id, int $quantity = 1, array $attributes = []): bool
     {
         $quantity = (preg_match('/^\d+$/', $quantity)) ? $quantity : 1;
@@ -135,14 +145,14 @@ class Cart
         }
 
         if (isset($this->items[$id])) {
-            $hash = bin2hex(json_encode(array_filter($attributes)));
+            $hash = md5(json_encode(array_filter($attributes)));
 
             foreach ($this->items[$id] as $index => $item) {
                 if ($item['hash'] == $hash) {
                     $this->items[$id][$index]['quantity'] = $quantity;
                     $this->items[$id][$index]['quantity'] = ($this->itemMaxQte < $this->items[$id][$index]['quantity'] && $this->itemMaxQte != 0) ? $this->itemMaxQte : $this->items[$id][$index]['quantity'];
 
-                    $this->write();
+                    $this->do();
 
                     return true;
                 }
@@ -152,6 +162,11 @@ class Cart
         return false;
     }
 
+    /**
+     * @param string $id
+     * @param array $attributes
+     * @return bool
+     */
     public function remove(string $id, array $attributes = []): bool
     {
         if (!isset($this->items[$id])) {
@@ -161,7 +176,7 @@ class Cart
         if (empty($attributes)) {
             unset($this->items[$id]);
 
-            $this->write();
+            $this->do();
 
             return true;
         }
@@ -172,7 +187,7 @@ class Cart
                 unset($this->items[$id][$index]);
                 $this->items[$id] = array_values($this->items[$id]);
 
-                $this->write();
+                $this->do();
 
                 return true;
             }
@@ -180,16 +195,44 @@ class Cart
 
         return false;
     }
+
+    /**
+     * @param string $id
+     * @param string|null $hash
+     * @return array|false
+     */
+    public function getItem(string $id, string $hash = null): array
+    {
+        if($hash){
+            $key = array_search($hash, array_column($this->items[$id], 'hash'));
+            if($key !== false)
+                return $this->items[$id][$key];
+            return false;
+        }
+        else
+            return reset($this->items[$id]);
+
+    }
+
+    /**
+     * @return array
+     */
     public function getItems(): array
     {
         return $this->items;
     }
 
+    /**
+     * @return bool
+     */
     public function isEmpty(): bool
     {
         return empty(array_filter($this->items));
     }
 
+    /**
+     * @return int
+     */
     public function getTotalItems(): int
     {
         $total = 0;
@@ -201,6 +244,9 @@ class Cart
         return $total;
     }
 
+    /**
+     * @return int
+     */
     public function getTotalQuantity(): int
     {
         $qte = 0;
@@ -218,7 +264,7 @@ class Cart
      * @param string $attribute
      * @return int
      */
-    public function getTotalAttribute(string $attribute = 'price'): int
+    public function getTotalAttribute(string $attribute = 'price'): float
     {
         $total = 0;
         foreach ($this->items as $items) {
@@ -238,7 +284,7 @@ class Cart
     {
         // clear array items
         $this->items = [];
-        $this->write();
+        $this->do();
     }
     /**
      *  Destory cart session.
@@ -254,16 +300,16 @@ class Cart
         }
     }
     /**
-     * Read items from cart session.
+     * bring items from cart session.
      */
-    private function read(): void
+    private function bring(): void
     {
         $this->items = ($this->cookieState) ? json_decode((isset($_COOKIE[$this->cartId])) ? $_COOKIE[$this->cartId] : '[]', true) : json_decode((isset($_SESSION[$this->cartId])) ? $_SESSION[$this->cartId] : '[]', true);
     }
     /**
-     * Write changes into cart session.
+     * do changes into cart session.
      */
-    private function write(): void
+    private function do(): void
     {
         if ($this->cookieState) {
             setcookie($this->cartId, json_encode(array_filter($this->items)), time() + 604800, "/");
