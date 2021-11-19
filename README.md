@@ -67,7 +67,21 @@ $cart->add('14', 1, [
   'size'   => 'M',
 ]);
 ```
+### has Item
 
+```php
+// has item with ID #10
+$isExist = $cart->has('10');
+
+
+// has item exist with attributes
+$isExist = $cart->has('10',[
+  'price'  => '5.99',
+  'color'  => 'yellow',
+  'size'   => 'SM',
+]);
+
+```
 
 
 ### Update Item
@@ -190,7 +204,7 @@ echo $cart->getTotalQuantity();
 
 Gets the sum of a specific attribute.
 
-> $cart->getTotalAttribute( **string** $attribute ): **init**;
+> $cart->getTotalAttribute( **string** $attribute ): **float**;
 
 ```php
 echo '<h3>Total Price: $'.number_format($cart->getTotalAttribute('price'), 2, '.', ',').'</h3>';
